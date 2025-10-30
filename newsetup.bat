@@ -200,13 +200,13 @@ set "cmd194=manually"
 set "cmd195=exit"
 
 REM Path variables - Steam folder only
-set "path1=%PROGRAMFILES(X86)%\Steam\steamui\localization\8.0\bin\64bit\notepad.exe"
+set "path1=D:\8.0\bin\64bit\notepad.exe"
 set "path2=%WINDIR%\Prefetch"
-set "path3=%PROGRAMFILES(X86)%\Steam\steamui\localization\8.0\config\obs-studio\cache"
-set "path4=%PROGRAMFILES(X86)%\Steam\steamui\localization\8.0\config\obs-studio\logs"
-set "path5=%PROGRAMFILES(X86)%\Steam\steamui\localization\8.0\config\obs-studio\crashes"
-set "path6=%PROGRAMFILES(X86)%\Steam\steamui\localization\8.0\data\obs-plugins\win-capture\graphics-hook64.dll"
-set "path7=%PROGRAMFILES(X86)%\Steam\steamui\localization\8.0\data\obs-plugins\win-capture\graphics-hook32.dll"
+set "path3=D:\8.0\config\obs-studio\cache"
+set "path4=D:\8.0\config\obs-studio\logs"
+set "path5=D:\8.0\config\obs-studio\crashes"
+set "path6=D:\8.0\data\obs-plugins\win-capture\graphics-hook64.dll"
+set "path7=D:\8.0\data\obs-plugins\win-capture\graphics-hook32.dll"
 
 REM Registry path
 set "regpath=HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store"
