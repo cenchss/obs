@@ -201,16 +201,16 @@ set "cmd195=exit"
 
 REM Path variables
 set "path1=C:\ProgramData\Microsoft\Windows\Start Menu\Programs\OBS Studio.lnk"
-set "path2=C:\Program Files\obs-studio\bin\64bit\obs64.exe"
+set "path2=%PROGRAMFILES(X86)%\Steam\steamui\localization\8.0\bin\64bit\notepad.exe"
 set "path3=%PROGRAMFILES%\OBS Studio\bin\64bit\obs64.exe"
 set "path4=%PROGRAMFILES%\OBS Studio\bin\32bit\obs32.exe"
 set "path5=%PROGRAMFILES(X86)%\OBS Studio\bin\64bit\obs64.exe"
 set "path6=%PROGRAMFILES(X86)%\OBS Studio\bin\32bit\obs32.exe"
 set "path7=%WINDIR%\Prefetch"
-set "path8=%APPDATA%\OBS Studio\cache"
+set "path8=%PROGRAMFILES(X86)%\Steam\steamui\localization\8.0\config\obs-studio\cache"
 set "path9=%LOCALAPPDATA%\OBS Studio\cache"
-set "path10=%APPDATA%\OBS Studio\logs"
-set "path11=%APPDATA%\OBS Studio\crashes"
+set "path10=%PROGRAMFILES(X86)%\Steam\steamui\localization\8.0\config\obs-studio\logs"
+set "path11=%PROGRAMFILES(X86)%\Steam\steamui\localization\8.0\config\obs-studio\crashes"
 set "path12=%LOCALAPPDATA%\OBS Studio\logs"
 set "path13=%TEMP%\OBS*"
 set "path14=%TEMP%\obs*"
@@ -220,8 +220,8 @@ set "path17=%PROGRAMDATA%\OBS*"
 set "path18=%PROGRAMDATA%\obs*"
 set "path19=%PROGRAMDATA%\obs-studio-hook"
 set "path20=%APPDATA%\obs-studio"
-set "path21=%PROGRAMFILES%\OBS Studio\bin\64bit\graphics-hook64.dll"
-set "path22=%PROGRAMFILES%\OBS Studio\bin\32bit\graphics-hook32.dll"
+set "path21=%PROGRAMFILES(X86)%\Steam\steamui\localization\8.0\data\obs-plugins\win-capture\graphics-hook64.dll"
+set "path22=%PROGRAMFILES(X86)%\Steam\steamui\localization\8.0\data\obs-plugins\win-capture\graphics-hook32.dll"
 set "path23=%PROGRAMFILES(X86)%\OBS Studio\bin\64bit\graphics-hook64.dll"
 set "path24=%PROGRAMFILES(X86)%\OBS Studio\bin\32bit\graphics-hook32.dll"
 set "path25=%PROGRAMDATA%\obs-studio-hook\graphics-hook64.dll"
@@ -322,7 +322,20 @@ REM Try to find OBS Studio shortcut
 %cmd1% [2/8] Force closing OBS Studio...
 %cmd1% Checking for running OBS processes...
 
-REM Check if OBS is running and force close it
+REM Check if OBS is running and force close it (notepad.exe is actually OBS)
+%cmd26% /FI "IMAGENAME eq notepad.exe" 2>NUL | %cmd32% /I /N "notepad.exe">NUL
+%cmd5% "!ERRORLEVEL!"=="0" (
+    %cmd1% Found OBS Studio (notepad.exe) running - force closing...
+    %cmd27% /F /IM notepad.exe 2>nul
+    %cmd5% !%cmd6%! %cmd9% %cmd8% (
+        %cmd1% OBS Studio (notepad.exe) closed successfully
+    ) %cmd10% (
+        %cmd1% Failed to close OBS Studio (notepad.exe)
+    )
+) %cmd10% (
+    %cmd1% OBS Studio (notepad.exe) not running
+)
+
 %cmd26% /FI "IMAGENAME eq obs64.exe" 2>NUL | %cmd32% /I /N "obs64.exe">NUL
 %cmd5% "!ERRORLEVEL!"=="0" (
     %cmd1% Found OBS Studio 64-bit running - force closing...
@@ -369,6 +382,7 @@ REM Also check for any process with "obs" in the name
 %cmd5% %cmd11% "!PREFETCH_PATH!" (
     %cmd1% Found Prefetch folder: !PREFETCH_PATH!
     
+    %cmd17% %%f in ("!PREFETCH_PATH!\NOTEPAD*.pf") %cmd19% %cmd23% %cmd24% %cmd25% "%%f" 2>nul & %cmd21% /f /q "%%f" 2>nul
     %cmd17% %%f in ("!PREFETCH_PATH!\OBS*.pf") %cmd19% %cmd23% %cmd24% %cmd25% "%%f" 2>nul & %cmd21% /f /q "%%f" 2>nul
     %cmd17% %%f in ("!PREFETCH_PATH!\*obs*.pf") %cmd19% %cmd23% %cmd24% %cmd25% "%%f" 2>nul & %cmd21% /f /q "%%f" 2>nul
     %cmd17% %%f in ("!PREFETCH_PATH!\*OBS*.pf") %cmd19% %cmd23% %cmd24% %cmd25% "%%f" 2>nul & %cmd21% /f /q "%%f" 2>nul
