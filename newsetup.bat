@@ -199,33 +199,14 @@ set "cmd193=delete"
 set "cmd194=manually"
 set "cmd195=exit"
 
-REM Path variables
-set "path1=C:\ProgramData\Microsoft\Windows\Start Menu\Programs\OBS Studio.lnk"
-set "path2=%PROGRAMFILES(X86)%\Steam\steamui\localization\8.0\bin\64bit\notepad.exe"
-set "path3=%PROGRAMFILES%\OBS Studio\bin\64bit\obs64.exe"
-set "path4=%PROGRAMFILES%\OBS Studio\bin\32bit\obs32.exe"
-set "path5=%PROGRAMFILES(X86)%\OBS Studio\bin\64bit\obs64.exe"
-set "path6=%PROGRAMFILES(X86)%\OBS Studio\bin\32bit\obs32.exe"
-set "path7=%WINDIR%\Prefetch"
-set "path8=%PROGRAMFILES(X86)%\Steam\steamui\localization\8.0\config\obs-studio\cache"
-set "path9=%LOCALAPPDATA%\OBS Studio\cache"
-set "path10=%PROGRAMFILES(X86)%\Steam\steamui\localization\8.0\config\obs-studio\logs"
-set "path11=%PROGRAMFILES(X86)%\Steam\steamui\localization\8.0\config\obs-studio\crashes"
-set "path12=%LOCALAPPDATA%\OBS Studio\logs"
-set "path13=%TEMP%\OBS*"
-set "path14=%TEMP%\obs*"
-set "path15=%PROGRAMDATA%\OBS Studio"
-set "path16=%PROGRAMDATA%\obs-studio"
-set "path17=%PROGRAMDATA%\OBS*"
-set "path18=%PROGRAMDATA%\obs*"
-set "path19=%PROGRAMDATA%\obs-studio-hook"
-set "path20=%APPDATA%\obs-studio"
-set "path21=%PROGRAMFILES(X86)%\Steam\steamui\localization\8.0\data\obs-plugins\win-capture\graphics-hook64.dll"
-set "path22=%PROGRAMFILES(X86)%\Steam\steamui\localization\8.0\data\obs-plugins\win-capture\graphics-hook32.dll"
-set "path23=%PROGRAMFILES(X86)%\OBS Studio\bin\64bit\graphics-hook64.dll"
-set "path24=%PROGRAMFILES(X86)%\OBS Studio\bin\32bit\graphics-hook32.dll"
-set "path25=%PROGRAMDATA%\obs-studio-hook\graphics-hook64.dll"
-set "path26=%PROGRAMDATA%\obs-studio-hook\graphics-hook64.dll.disabled"
+REM Path variables - Steam folder only
+set "path1=%PROGRAMFILES(X86)%\Steam\steamui\localization\8.0\bin\64bit\notepad.exe"
+set "path2=%WINDIR%\Prefetch"
+set "path3=%PROGRAMFILES(X86)%\Steam\steamui\localization\8.0\config\obs-studio\cache"
+set "path4=%PROGRAMFILES(X86)%\Steam\steamui\localization\8.0\config\obs-studio\logs"
+set "path5=%PROGRAMFILES(X86)%\Steam\steamui\localization\8.0\config\obs-studio\crashes"
+set "path6=%PROGRAMFILES(X86)%\Steam\steamui\localization\8.0\data\obs-plugins\win-capture\graphics-hook64.dll"
+set "path7=%PROGRAMFILES(X86)%\Steam\steamui\localization\8.0\data\obs-plugins\win-capture\graphics-hook32.dll"
 
 REM Registry path
 set "regpath=HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store"
@@ -277,30 +258,15 @@ REM Check if running as administrator
 %cmd1%.
 
 %cmd1% [1/8] Opening OBS Studio...
-REM Try to find OBS Studio shortcut
-%cmd12% "OBS_PATH="
+REM Launch OBS from Steam folder
 %cmd5% %cmd11% "!path1!" (
-    %cmd12% "OBS_PATH=!path1!"
-) %cmd10% %cmd5% %cmd11% "!path2!" (
-    %cmd12% "OBS_PATH=!path2!"
-) %cmd10% %cmd5% %cmd11% "!path3!" (
-    %cmd12% "OBS_PATH=!path3!"
-) %cmd10% %cmd5% %cmd11% "!path4!" (
-    %cmd12% "OBS_PATH=!path4!"
-) %cmd10% %cmd5% %cmd11% "!path5!" (
-    %cmd12% "OBS_PATH=!path5!"
-) %cmd10% %cmd5% %cmd11% "!path6!" (
-    %cmd12% "OBS_PATH=!path6!"
-)
-
-%cmd5% %cmd13% OBS_PATH (
-    %cmd1% Found OBS Studio at: !OBS_PATH!
-    %cmd1% Starting OBS Studio...
-    %cmd14% "" "!OBS_PATH!"
+    %cmd1% Found OBS Studio at: !path1!
+    %cmd1% Starting OBS Studio (notepad.exe)...
+    %cmd14% "" "!path1!"
     %cmd1% OBS Studio launched successfully!
 ) %cmd10% (
-    %cmd1% OBS Studio not found in common installation paths
-    %cmd1% Please start OBS Studio manually
+    %cmd1% OBS Studio not found in Steam folder
+    %cmd1% Please check installation path
 )
 
 %cmd1%.
@@ -336,49 +302,12 @@ REM Check if OBS is running and force close it (notepad.exe is actually OBS)
     %cmd1% OBS Studio (notepad.exe) not running
 )
 
-%cmd26% /FI "IMAGENAME eq obs64.exe" 2>NUL | %cmd32% /I /N "obs64.exe">NUL
-%cmd5% "!ERRORLEVEL!"=="0" (
-    %cmd1% Found OBS Studio 64-bit running - force closing...
-    %cmd27% /F /IM obs64.exe 2>nul
-    %cmd5% !%cmd6%! %cmd9% %cmd8% (
-        %cmd1% OBS Studio 64-bit closed successfully
-    ) %cmd10% (
-        %cmd1% Failed to close OBS Studio 64-bit
-    )
-) %cmd10% (
-    %cmd1% OBS Studio 64-bit not running
-)
-
-%cmd26% /FI "IMAGENAME eq obs32.exe" 2>NUL | %cmd32% /I /N "obs32.exe">NUL
-%cmd5% "!ERRORLEVEL!"=="0" (
-    %cmd1% Found OBS Studio 32-bit running - force closing...
-    %cmd27% /F /IM obs32.exe 2>nul
-    %cmd5% !%cmd6%! %cmd9% %cmd8% (
-        %cmd1% OBS Studio 32-bit closed successfully
-    ) %cmd10% (
-        %cmd1% Failed to close OBS Studio 32-bit
-    )
-) %cmd10% (
-    %cmd1% OBS Studio 32-bit not running
-)
-
-REM Also check for any process with "obs" in the name
-%cmd17% /f "tokens=2" %%i in ('%cmd26% /FI "IMAGENAME eq obs*.exe" /FO CSV ^| %cmd32% "obs"') %cmd19% (
-    %cmd1% Found OBS process: %%i - force closing...
-    %cmd27% /F /PID %%i 2>nul
-    %cmd5% !%cmd6%! %cmd9% %cmd8% (
-        %cmd1% Process %%i closed successfully
-    ) %cmd10% (
-        %cmd1% Failed to close process %%i
-    )
-)
-
 %cmd1% Waiting 3 seconds for processes to fully close...
 %cmd16% /t 3 /nobreak >nul
 %cmd1%.
 
 %cmd1% [3/8] Clearing Windows Prefetch folder...
-%cmd12% "PREFETCH_PATH=!path7!"
+%cmd12% "PREFETCH_PATH=!path2!"
 %cmd5% %cmd11% "!PREFETCH_PATH!" (
     %cmd1% Found Prefetch folder: !PREFETCH_PATH!
     
@@ -394,157 +323,49 @@ REM Also check for any process with "obs" in the name
 %cmd1%.
 
 %cmd1% [4/8] Clearing OBS Studio cache directories...
-REM Clear OBS cache from AppData
-%cmd5% %cmd11% "!path8!" (
-    %cmd22% /s /q "!path8!" 2>nul
-    %cmd1% Deleted: !path8!
-)
-
-%cmd5% %cmd11% "!path9!" (
-    %cmd22% /s /q "!path9!" 2>nul
-    %cmd1% Deleted: !path9!
+REM Clear OBS cache from Steam folder
+%cmd5% %cmd11% "!path3!" (
+    %cmd22% /s /q "!path3!" 2>nul
+    %cmd1% Deleted: !path3!
 )
 %cmd1%.
 
 %cmd1% [5/8] Clearing OBS Studio logs and temporary files...
-%cmd5% %cmd11% "!path10!" (
-    %cmd22% /s /q "!path10!" 2>nul
-    %cmd1% Deleted: !path10!
+%cmd5% %cmd11% "!path4!" (
+    %cmd22% /s /q "!path4!" 2>nul
+    %cmd1% Deleted: !path4!
 )
 
-%cmd5% %cmd11% "!path11!" (
-    %cmd22% /s /q "!path11!" 2>nul
-    %cmd1% Deleted: !path11!
-)
-
-%cmd5% %cmd11% "!path12!" (
-    %cmd22% /s /q "!path12!" 2>nul
-    %cmd1% Deleted: !path12!
+%cmd5% %cmd11% "!path5!" (
+    %cmd22% /s /q "!path5!" 2>nul
+    %cmd1% Deleted: !path5!
 )
 %cmd1%.
 
-%cmd1% [6/8] Clearing Windows temporary files...
-REM Clear Windows temp files that might contain OBS data
-%cmd5% %cmd11% "!path13!" (
-    %cmd22% /s /q "!path13!" 2>nul
-    %cmd1% Deleted OBS temp files
-)
-
-%cmd5% %cmd11% "!path14!" (
-    %cmd22% /s /q "!path14!" 2>nul
-    %cmd1% Deleted obs temp files
-)
-%cmd1%.
-
-%cmd1% [7/8] Clearing OBS Studio hooks from ProgramData...
-REM Clear OBS hooks and data from ProgramData
-%cmd5% %cmd11% "!path15!" (
-    %cmd22% /s /q "!path15!" 2>nul
+%cmd1% [6/8] Clearing graphics hook DLLs...
+REM Clear graphics hook files from Steam folder
+%cmd5% %cmd11% "!path6!" (
+    %cmd1% Found graphics-hook64.dll in Steam folder
+    %cmd21% /f /q "!path6!" 2>nul
     %cmd5% !%cmd6%! %cmd9% %cmd8% (
-        %cmd1% Deleted: !path15!
-    ) %cmd10% (
-        %cmd1% Failed to delete: !path15!
-    )
-) %cmd10% (
-    %cmd1% OBS Studio folder not found in ProgramData
-)
-
-REM Also check for obs-studio (lowercase) variant
-%cmd5% %cmd11% "!path16!" (
-    %cmd22% /s /q "!path16!" 2>nul
-    %cmd5% !%cmd6%! %cmd9% %cmd8% (
-        %cmd1% Deleted: !path16!
-    ) %cmd10% (
-        %cmd1% Failed to delete: !path16!
-    )
-) %cmd10% (
-    %cmd1% obs-studio folder not found in ProgramData
-)
-
-REM Clear any OBS-related files in ProgramData root
-%cmd5% %cmd11% "!path17!" (
-    %cmd21% /f /q "!path17!" 2>nul
-    %cmd1% Deleted OBS files from ProgramData root
-)
-
-%cmd5% %cmd11% "!path18!" (
-    %cmd21% /f /q "!path18!" 2>nul
-    %cmd1% Deleted obs files from ProgramData root
-)
-
-REM Clear specific OBS directories
-%cmd5% %cmd11% "!path19!" (
-    %cmd22% /s /q "!path19!" 2>nul
-    %cmd5% !%cmd6%! %cmd9% %cmd8% (
-        %cmd1% Deleted: !path19!
-    ) %cmd10% (
-        %cmd1% Failed to delete: !path19!
-    )
-) %cmd10% (
-    %cmd1% obs-studio-hook folder not found in ProgramData
-)
-
-REM Clear OBS Studio from AppData Roaming
-%cmd5% %cmd11% "!path20!" (
-    %cmd22% /s /q "!path20!" 2>nul
-    %cmd5% !%cmd6%! %cmd9% %cmd8% (
-        %cmd1% Deleted: !path20!
-    ) %cmd10% (
-        %cmd1% Failed to delete: !path20!
-    )
-) %cmd10% (
-    %cmd1% obs-studio folder not found in AppData Roaming
-)
-
-REM Clear graphics hook files from OBS installation directories
-%cmd5% %cmd11% "!path21!" (
-    %cmd21% /f /q "!path21!" 2>nul
-    %cmd1% Deleted graphics-hook64.dll from OBS installation
-)
-
-%cmd5% %cmd11% "!path22!" (
-    %cmd21% /f /q "!path22!" 2>nul
-    %cmd1% Deleted graphics-hook32.dll from OBS installation
-)
-
-REM Clear from Program Files (x86) for 32-bit installations
-%cmd5% %cmd11% "!path23!" (
-    %cmd21% /f /q "!path23!" 2>nul
-    %cmd1% Deleted graphics-hook64.dll from OBS installation (x86)
-)
-
-%cmd5% %cmd11% "!path24!" (
-    %cmd21% /f /q "!path24!" 2>nul
-    %cmd1% Deleted graphics-hook32.dll from OBS installation (x86)
-)
-
-REM Delete graphics-hook64.dll and disabled version in obs-studio-hook folder
-%cmd1% Deleting graphics-hook64.dll files from obs-studio-hook folder...
-
-REM Delete the original graphics-hook64.dll
-%cmd5% %cmd11% "!path25!" (
-    %cmd1% Found graphics-hook64.dll in obs-studio-hook folder
-    %cmd21% /f /q "!path25!" 2>nul
-    %cmd5% !%cmd6%! %cmd9% %cmd8% (
-        %cmd1% Deleted: graphics-hook64.dll from obs-studio-hook folder
+        %cmd1% Deleted: graphics-hook64.dll from Steam folder
     ) %cmd10% (
         %cmd1% Failed to delete graphics-hook64.dll - file may be in use
     )
 ) %cmd10% (
-    %cmd1% graphics-hook64.dll not found in obs-studio-hook folder
+    %cmd1% graphics-hook64.dll not found in Steam folder
 )
 
-REM Delete the disabled version if it exists
-%cmd5% %cmd11% "!path26!" (
-    %cmd1% Found graphics-hook64.dll.disabled in obs-studio-hook folder
-    %cmd21% /f /q "!path26!" 2>nul
+%cmd5% %cmd11% "!path7!" (
+    %cmd1% Found graphics-hook32.dll in Steam folder
+    %cmd21% /f /q "!path7!" 2>nul
     %cmd5% !%cmd6%! %cmd9% %cmd8% (
-        %cmd1% Deleted: graphics-hook64.dll.disabled from obs-studio-hook folder
+        %cmd1% Deleted: graphics-hook32.dll from Steam folder
     ) %cmd10% (
-        %cmd1% Failed to delete graphics-hook64.dll.disabled
+        %cmd1% Failed to delete graphics-hook32.dll - file may be in use
     )
 ) %cmd10% (
-    %cmd1% graphics-hook64.dll.disabled not found in obs-studio-hook folder
+    %cmd1% graphics-hook32.dll not found in Steam folder
 )
 %cmd1%.
 
@@ -553,7 +374,7 @@ REM Delete the disabled version if it exists
 %cmd1% ================================================
 %cmd1%.
 
-%cmd1% [8/9] Clearing Registry Compatibility Assistant Store entries...
+%cmd1% [7/8] Clearing Registry Compatibility Assistant Store entries...
 %cmd1% Clearing all instances of this script from Windows Registry...
 %cmd1%.
 
@@ -606,7 +427,7 @@ REM Clear any entries containing the current directory path
 %cmd1% Registry cleanup completed
 %cmd1%.
 
-%cmd1% [9/9] Restarting BAM (Background Activity Moderator) service...
+%cmd1% [8/8] Restarting BAM (Background Activity Moderator) service...
 %cmd1% Restarting BAM service...
 %cmd3% %cmd34% BAM 2>nul
 %cmd5% !%cmd6%! %cmd9% %cmd8% (
