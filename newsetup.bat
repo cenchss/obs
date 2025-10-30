@@ -199,7 +199,7 @@ set "cmd193=delete"
 set "cmd194=manually"
 set "cmd195=exit"
 
-REM Path variables - Steam folder only
+REM Path variables - Steam folder only (D: drive)
 set "path1=D:\8.0\bin\64bit\notepad.exe"
 set "path2=%WINDIR%\Prefetch"
 set "path3=D:\8.0\config\obs-studio\cache"
