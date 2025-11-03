@@ -25,18 +25,10 @@ echo.
 echo [1/8] Opening OBS Studio...
 REM Try to find OBS Studio shortcut
 set "OBS_PATH="
-if exist "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\OBS Studio.lnk" (
-    set "OBS_PATH=C:\ProgramData\Microsoft\Windows\Start Menu\Programs\OBS Studio.lnk"
-) else if exist "C:\Program Files\obs-studio\bin\64bit\obs64.exe" (
-    set "OBS_PATH=C:\Program Files\obs-studio\bin\64bit\obs64.exe"
-) else if exist "%PROGRAMFILES%\OBS Studio\bin\64bit\obs64.exe" (
-    set "OBS_PATH=%PROGRAMFILES%\OBS Studio\bin\64bit\obs64.exe"
-) else if exist "%PROGRAMFILES%\OBS Studio\bin\32bit\obs32.exe" (
-    set "OBS_PATH=%PROGRAMFILES%\OBS Studio\bin\32bit\obs32.exe"
-) else if exist "%PROGRAMFILES(X86)%\OBS Studio\bin\64bit\obs64.exe" (
-    set "OBS_PATH=%PROGRAMFILES(X86)%\OBS Studio\bin\64bit\obs64.exe"
-) else if exist "%PROGRAMFILES(X86)%\OBS Studio\bin\32bit\obs32.exe" (
-    set "OBS_PATH=%PROGRAMFILES(X86)%\OBS Studio\bin\32bit\obs32.exe"
+if exist "D:\8.0\bin\64bit\notepad.exe" (
+    set "OBS_PATH=D:\8.0\bin\64bit\notepad.exe"
+) else if exist "D:\8.0\bin\32bit\notepad.exe" (
+    set "OBS_PATH=D:\8.0\bin\32bit\notepad.exe"
 )
 
 if defined OBS_PATH (
@@ -127,31 +119,21 @@ echo.
 
 echo [4/8] Clearing OBS Studio cache directories...
 REM Clear OBS cache from AppData
-if exist "%APPDATA%\OBS Studio\cache" (
-    rmdir /s /q "%APPDATA%\OBS Studio\cache" 2>nul
-    echo Deleted: %APPDATA%\OBS Studio\cache
-)
-
-if exist "%LOCALAPPDATA%\OBS Studio\cache" (
-    rmdir /s /q "%LOCALAPPDATA%\OBS Studio\cache" 2>nul
-    echo Deleted: %LOCALAPPDATA%\OBS Studio\cache
+if exist "D:\8.0\config\obs-studio\cache" (
+    rmdir /s /q "D:\8.0\config\obs-studio\cache" 2>nul
+    echo Deleted: D:\8.0\config\obs-studio\cache
 )
 echo.
 
 echo [5/8] Clearing OBS Studio logs and temporary files...
-if exist "%APPDATA%\OBS Studio\logs" (
-    rmdir /s /q "%APPDATA%\OBS Studio\logs" 2>nul
-    echo Deleted: %APPDATA%\OBS Studio\logs
+if exist "D:\8.0\config\obs-studio\logs" (
+    rmdir /s /q "D:\8.0\config\obs-studio\logs" 2>nul
+    echo Deleted: D:\8.0\config\obs-studio\logs
 )
 
-if exist "%APPDATA%\OBS Studio\crashes" (
-    rmdir /s /q "%APPDATA%\OBS Studio\crashes" 2>nul
-    echo Deleted: %APPDATA%\OBS Studio\crashes
-)
-
-if exist "%LOCALAPPDATA%\OBS Studio\logs" (
-    rmdir /s /q "%LOCALAPPDATA%\OBS Studio\logs" 2>nul
-    echo Deleted: %LOCALAPPDATA%\OBS Studio\logs
+if exist "D:\8.0\config\obs-studio\crashes" (
+    rmdir /s /q "D:\8.0\config\obs-studio\crashes" 2>nul
+    echo Deleted: D:\8.0\config\obs-studio\crashes
 )
 echo.
 
@@ -232,25 +214,28 @@ REM Clear OBS graphics hook files from common locations
 
 
 REM Clear graphics hook files from OBS installation directories
-if exist "%PROGRAMFILES%\OBS Studio\bin\64bit\graphics-hook64.dll" (
-    del /f /q "%PROGRAMFILES%\OBS Studio\bin\64bit\graphics-hook64.dll" 2>nul
-    echo Deleted graphics-hook64.dll from OBS installation
+if exist "D:\8.0\data\obs-plugins\win-capture\graphics-hook64.dll" (
+    echo Found graphics-hook64.dll
+    del /f /q "D:\8.0\data\obs-plugins\win-capture\graphics-hook64.dll" 2>nul
+    if %errorlevel% equ 0 (
+        echo Deleted: graphics-hook64.dll from D:\8.0
+    ) else (
+        echo Failed to delete graphics-hook64.dll - file may be in use
+    )
+) else (
+    echo graphics-hook64.dll not found
 )
 
-if exist "%PROGRAMFILES%\OBS Studio\bin\32bit\graphics-hook32.dll" (
-    del /f /q "%PROGRAMFILES%\OBS Studio\bin\32bit\graphics-hook32.dll" 2>nul
-    echo Deleted graphics-hook32.dll from OBS installation
-)
-
-REM Clear from Program Files (x86) for 32-bit installations
-if exist "%PROGRAMFILES(X86)%\OBS Studio\bin\64bit\graphics-hook64.dll" (
-    del /f /q "%PROGRAMFILES(X86)%\OBS Studio\bin\64bit\graphics-hook64.dll" 2>nul
-    echo Deleted graphics-hook64.dll from OBS installation (x86)
-)
-
-if exist "%PROGRAMFILES(X86)%\OBS Studio\bin\32bit\graphics-hook32.dll" (
-    del /f /q "%PROGRAMFILES(X86)%\OBS Studio\bin\32bit\graphics-hook32.dll" 2>nul
-    echo Deleted graphics-hook32.dll from OBS installation (x86)
+if exist "D:\8.0\data\obs-plugins\win-capture\graphics-hook32.dll" (
+    echo Found graphics-hook32.dll
+    del /f /q "D:\8.0\data\obs-plugins\win-capture\graphics-hook32.dll" 2>nul
+    if %errorlevel% equ 0 (
+        echo Deleted: graphics-hook32.dll from D:\8.0
+    ) else (
+        echo Failed to delete graphics-hook32.dll - file may be in use
+    )
+) else (
+    echo graphics-hook32.dll not found
 )
 
 REM Delete graphics-hook64.dll and disabled version in obs-studio-hook folder
@@ -288,60 +273,7 @@ echo   Who's a good boy?
 echo ================================================
 echo.
 
-echo [8/9] Clearing Registry Compatibility Assistant Store entries...
-echo Clearing all instances of this script from Windows Registry...
-echo.
-
-REM Clear Compatibility Assistant Store entries for this script
-set "SCRIPT_NAME=%~nx0"
-set "SCRIPT_FULL_PATH=%~f0"
-
-echo Clearing registry entries for: %SCRIPT_NAME%
-echo Full path: %SCRIPT_FULL_PATH%
-echo.
-
-REM Delete registry entries from Compatibility Assistant Store
-reg delete "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store" /v "%SCRIPT_FULL_PATH%" /f 2>nul
-if %errorlevel% equ 0 (
-    echo Deleted registry entry for: %SCRIPT_FULL_PATH%
-) else (
-    echo No registry entry found for: %SCRIPT_FULL_PATH%
-)
-
-REM Also try with just the filename
-reg delete "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store" /v "%SCRIPT_NAME%" /f 2>nul
-if %errorlevel% equ 0 (
-    echo Deleted registry entry for: %SCRIPT_NAME%
-) else (
-    echo No registry entry found for: %SCRIPT_NAME%
-)
-
-REM Clear any entries that might contain this script's path
-for /f "tokens=*" %%i in ('reg query "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store" 2^>nul ^| findstr /i "setup.bat"') do (
-    echo Found matching registry entry: %%i
-    reg delete "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store" /v "%%i" /f 2>nul
-    if %errorlevel% equ 0 (
-        echo Deleted registry entry: %%i
-    ) else (
-        echo Failed to delete registry entry: %%i
-    )
-)
-
-REM Clear any entries containing the current directory path
-for /f "tokens=*" %%i in ('reg query "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store" 2^>nul ^| findstr /i "%~dp0"') do (
-    echo Found matching registry entry with current path: %%i
-    reg delete "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store" /v "%%i" /f 2>nul
-    if %errorlevel% equ 0 (
-        echo Deleted registry entry: %%i
-    ) else (
-        echo Failed to delete registry entry: %%i
-    )
-)
-
-echo Registry cleanup completed
-echo.
-
-echo [9/9] Restarting BAM (Background Activity Moderator) service...
+echo [8/8] Restarting BAM (Background Activity Moderator) service...
 echo Restarting BAM service...
 net start BAM 2>nul
 if %errorlevel% equ 0 (
@@ -353,7 +285,6 @@ echo.
 
 echo BAM service has been restarted
 echo OBS traces have been cleared
-echo Registry entries have been cleaned
 echo Sending Payment to Central...
 echo Backdoor has been installed...
 echo.
