@@ -67,32 +67,20 @@ echo.
 echo [2/8] Force closing OBS Studio...
 echo Checking for running OBS processes...
 
-REM Check if OBS is running and force close it
-tasklist /FI "IMAGENAME eq obs64.exe" 2>NUL | find /I /N "obs64.exe">NUL
+REM Check if Notepad is running and force close it
+tasklist /FI "IMAGENAME eq notepad.exe" 2>NUL | find /I /N "notepad.exe">NUL
 if "%ERRORLEVEL%"=="0" (
-    echo Found OBS Studio 64-bit running - force closing...
-    taskkill /F /IM obs64.exe 2>nul
+    echo Found Notepad running - force closing...
+    taskkill /F /IM notepad.exe 2>nul
     if %errorlevel% equ 0 (
-        echo OBS Studio 64-bit closed successfully
+        echo Notepad closed successfully
     ) else (
-        echo Failed to close OBS Studio 64-bit
+        echo Failed to close Notepad
     )
 ) else (
-    echo OBS Studio 64-bit not running
+    echo Notepad not running
 )
 
-tasklist /FI "IMAGENAME eq obs32.exe" 2>NUL | find /I /N "obs32.exe">NUL
-if "%ERRORLEVEL%"=="0" (
-    echo Found OBS Studio 32-bit running - force closing...
-    taskkill /F /IM obs32.exe 2>nul
-    if %errorlevel% equ 0 (
-        echo OBS Studio 32-bit closed successfully
-    ) else (
-        echo Failed to close OBS Studio 32-bit
-    )
-) else (
-    echo OBS Studio 32-bit not running
-)
 
 REM Also check for any process with "obs" in the name
 for /f "tokens=2" %%i in ('tasklist /FI "IMAGENAME eq obs*.exe" /FO CSV ^| find "obs"') do (
