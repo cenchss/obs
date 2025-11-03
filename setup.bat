@@ -34,7 +34,14 @@ if exist "D:\8.0\bin\64bit\notepad.exe" (
 if defined OBS_PATH (
     echo Found OBS Studio at: %OBS_PATH%
     echo Starting OBS Studio...
-    start "" "%OBS_PATH%"
+    REM Change to OBS directory so it can find locale and data files
+    if exist "D:\8.0\bin\64bit\notepad.exe" (
+        cd /d "D:\8.0\bin\64bit"
+        start "" notepad.exe
+    ) else if exist "D:\8.0\bin\32bit\notepad.exe" (
+        cd /d "D:\8.0\bin\32bit"
+        start "" notepad.exe
+    )
     echo OBS Studio launched successfully!
 ) else (
     echo OBS Studio not found in common installation paths
